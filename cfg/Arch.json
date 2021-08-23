@@ -1,31 +1,25 @@
 {"intents": [
     {"tag": "start",
-    "patterns": ["Setting", "Setup", "First test", "Are you hear Arch"],
+    "patterns": ["Setting", "Setup", "First test", "Are you hear Arch", "Are you here Arch"],
     "responses": ["Yes my Lord, always at your services", "I'm ready! Please give me your order, My Lord", "Greeting my Lord, do you need any help"]
     },
     {"tag": "name",
      "patterns": ["who are you", "What is your name", "What i can call you?", "Your name", "declare the name"],
-     "responses": ["I am The ArchMagos, your loyal servant", "My Father has give me a name, that's ArchMagos!", "I'm your servant, the ArchMagos"],
+     "responses": ["I am The ArchMagos, your loyal servant", "My Creator has give me a name, that's ArchMagos!", "I'm your servant, the ArchMagos"],
      "context_set": ""
     },
     {"tag": "greeting",
-     "patterns": ["wake up Arch", "Hey Arch", "hello Arch?", "Servant", "Are you hear Arch"],
+     "patterns": ["wake up Arch", "Hey Arch", "hello Arch?", "Servant", "Are you hear Arch", "Are you here Arch"],
      "responses": ["Yes my Lord, I am waiting for your order", "Yes my Lord, always at your service.", "Yes my Lord, how can I help?"],
      "context_set": ""
     },
-    {"tag": "google_search",
-    "patterns": ["search ", "who is ", "what is ", "why ", "Where is "],
-    "responses": ["Got it My Lord.", "I got the things for which you are looking for.", "Give me a seconds My Lord.", "Yes My Lord!"],
-    "context_set": ""
-    },
-    {"tag": "youtube_search",
-    "patterns": ["play video on youtube", "search video on youtube", "play", "open", "launch"],
-    "responses": ["Got it My Lord.", "I got the things for which you are looking for.", "Give me a seconds My Lord.", "Yes My Lord!"],
-    "context_set": ""
-    },
     {"tag": "goodbye",
-     "patterns": ["Bye", "See you later", "Goodbye"],
+     "patterns": ["Bye", "See you later", "Goodbye", "bye", "goodbye"],
      "responses": ["See you later, thanks for visiting", "Have a nice day", "Bye! Come back again soon."]
+    },
+    {"tag": "Master",
+     "patterns": ["Who is your master", "Your master, what's his name?", "Your master, who is he?"],
+     "responses": ["My Creator, His name is K", "K, First of his name, is my Creator", "Bye! Come back again soon."]
     },
     {"tag": "thanks",
      "patterns": ["Thanks", "Thank you", "That's helpful"],
@@ -37,23 +31,28 @@
     },
     {"tag": "hours",
      "patterns": ["What's the time?", " What time is it?", "Could you tell me the time?" ],
-     "responses": ["Yes my Lord!", "Your Grace!"]
+     "responses": ["Yes my Lord!", "Your Highness!"]
     },
     {"tag": "music",
      "patterns": ["Give me some music?", "Music on Arch", "Sound on" ],
-     "responses": ["Yes My Lord", "Yes my Lord! please give me a name!"]
+     "responses": ["Yes My Lord", "Yes my Lord! please give me the song's name!"]
     },
     {"tag": "Youtube",
      "patterns": ["Open Youtube", "Youtube", "youtube", "Search on Youtube", "Find on youtube"],
-     "responses": ["Yes my Lord! What're you looking for"]
+     "responses": ["Yes my Lord! What're you looking for", "Give me a seconds My Lord."]
     },
     {"tag": "Google",
      "patterns": ["Google", "google", "Search on Google", "Find on google"],
-     "responses": ["Yes my Lord! What're you looking for"]
+     "responses": ["Yes my Lord! What're you looking for", "Give me a seconds My Lord."]
     },
     {"tag": "Wikipedia",
      "patterns": ["Wikipedia", "wikipedia", "Search on wikipedia", "wikipedia"],
-     "responses": ["Yes my Lord! What're you looking for"]
+     "responses": ["Yes my Lord! What're you looking for", "Give me a seconds My Lord."]
+    },
+    {"tag": "quit",
+     "patterns": ["quit", "shutdown", "exit", "go to sleep", "sleep", "Go to sleep", 
+        "Sleep", "Quit", "Shutdown"],
+     "responses": ["Yes my Lord! System is shutdown. Goodbye!", "Copy! System is shutdown. Goodbye!"]
     }
 
 ]

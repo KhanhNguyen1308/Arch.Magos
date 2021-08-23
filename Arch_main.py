@@ -4,21 +4,24 @@ import json
 import random
 import pickle
 import pyttsx3
+import wikipedia
 import numpy as np
 import pandas as pd
+import urllib.request
 import speech_recognition as sr
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
+wikipedia.set_lang("en")
 born_time=1629699876.6019154
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open("cfg/tiengviet.json").read())
+intents = json.loads(open("cfg/Arch.json").read())
 words = pickle.load(open('cfg/words.pkl', 'rb'))
 classes = pickle.load(open('cfg/classes.pkl', 'rb'))
 model = load_model('model/Arch.h5')
 Arch = pyttsx3.init('espeak')
 voice = Arch.getProperty('voices')
-Arch.setProperty('voice', voice.id[16])
-Arch.setProperty('rate',160)
+Arch.setProperty('voice', voice[16])
+Arch.setProperty('rate',150)
 
 def speak(audio):
     print('Arch:' + audio)
@@ -63,19 +66,29 @@ def get_response(intent_list, intent_json):
             break
     return result
 
-
+work_list = ["Youtube", "Google", "Wikipedia", "music"]
 print('Arch is ready master')
 while True:
     message = input("Master: ")
     ints = predict_class(message)
     tag = ints[0]['intent']
     res = get_response(ints, intents)
-    speak(res)
+    if tag not in work_list:
+        speak(res)
     if tag == "quit":
         break
     if tag == "Youtube":
-        print("Youtube")
+        res = "Yes my Lord! What're you looking for?"
+        speak(res)
+        search = input("Master: ")
+        url = urllib.request.urlopen("https://www.youtube.com/results?search_query="+search)
+        speak("Here is some results i found for "+search)
     if tag == "Google":
-        print("Google")
+        res = "Yes my Lord! What're you looking for?"
+        speak(res)
+        search = input("Master: ")
     if tag == "Wikipedia":
-        print("Wikipedia")
+        res = "Your Highness! What're you looking for?"
+        speak(res)
+        search = input("Master: ")
+        wikipedia.summary(search, sentences=1)
