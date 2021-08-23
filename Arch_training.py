@@ -10,7 +10,7 @@ from tensorflow.keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import SGD
 start_time = time.time()
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open("cfg/tiengviet.json").read())
+intents = json.loads(open("cfg/Arch.json").read())
 words = []
 classes = []
 documents = []
@@ -58,6 +58,6 @@ sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=2000, batch_size=32, verbose=1)
-model.save('model/Izu.h5', hist)
+model.save('model/Arch.h5', hist)
 print("Time: "+str(int(time.time() - start_time))+"s")
 print("Done! Ready for test")

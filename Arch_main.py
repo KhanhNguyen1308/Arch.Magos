@@ -1,58 +1,81 @@
 import os
 import nltk
-import numpy
+import json
 import random
+import pickle
 import pyttsx3
-import tflearn
-import datetime
-import tensorflow
+import numpy as np
+import pandas as pd
 import speech_recognition as sr
-from tensorflow.python.framework import ops
-from nltk.stem.lancaster import LancasterStemmer
-from load import model, labels, words, data
-stemmer = LancasterStemmer()
-ArchMagos = pyttsx3.init()
-voice = ArchMagos.getProperty('voices')
-# id 63=VN
-ArchMagos.setProperty('voice', voice[16].id)
-ArchMagos.setProperty('rate',160)
-model.load("model.tflearn")
+from nltk.stem import WordNetLemmatizer
+from tensorflow.keras.models import load_model
+born_time=1629699876.6019154
+lemmatizer = WordNetLemmatizer()
+intents = json.loads(open("cfg/tiengviet.json").read())
+words = pickle.load(open('cfg/words.pkl', 'rb'))
+classes = pickle.load(open('cfg/classes.pkl', 'rb'))
+model = load_model('model/Arch.h5')
+Arch = pyttsx3.init('espeak')
+voice = Arch.getProperty('voices')
+Arch.setProperty('voice', voice.id[16])
+Arch.setProperty('rate',160)
 
 def speak(audio):
-    print('F.R.I.D.A.Y :' + audio)
-    ArchMagos.say(audio)
-    ArchMagos.runAndWait()
+    print('Arch:' + audio)
+    Arch.say(audio)
+    Arch.runAndWait()
 
-def bag_of_words(s, words):
-    bag = [0 for _ in range(len(words))]
 
-    s_words = nltk.word_tokenize(s)
-    s_words = [stemmer.stem(word.lower()) for word in s_words]
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
+    return sentence_words
 
-    for se in s_words:
-        for i, w in enumerate(words):
-            if w == se:
+
+def bag_of_word(sentence):
+    sentence_words = clean_up_sentence(sentence)
+    bag = [0] * len(words)
+    for w in  sentence_words:
+        for i,word in enumerate(words):
+            if word == w:
                 bag[i] = 1
+    return np.array(bag)
 
-    return numpy.array(bag)
+
+def predict_class(sentence):
+    bow = bag_of_word(sentence)
+    res = model.predict(np.array([bow]))[0]
+    ERROR_thres = 0.25
+    results = [[i, r] for i, r in enumerate(res) if r> ERROR_thres]
+    results.sort(key=lambda x : x[1], reverse=True)
+    return_list = []
+    for r in results:
+        return_list.append({'intent': classes[r[0]], 'probability':str(r[1])})
+    return return_list
 
 
-def chat():
-    print("Start talking with the bot (type quit to stop)!")
-    while True:
-        inp = input("Master: ")
-        if inp.lower() == "quit":
-            speak("system is shuting down. see you later Master")
+def get_response(intent_list, intent_json):
+    tag = intent_list[0]['intent']
+    list_of_intents = intent_json['intents']
+    for i in list_of_intents:
+        if i['tag']== tag:
+            result = random.choice(i['responses'])
             break
-
-        results = model.predict([bag_of_words(inp, words)])
-        results_index = numpy.argmax(results)
-        tag = labels[results_index]
-        for tg in data["intents"]:
-            if tg['tag'] == tag:
-                responses = tg['responses']
-        res = random.choice(responses)
-        speak(res)
+    return result
 
 
-chat()
+print('Arch is ready master')
+while True:
+    message = input("Master: ")
+    ints = predict_class(message)
+    tag = ints[0]['intent']
+    res = get_response(ints, intents)
+    speak(res)
+    if tag == "quit":
+        break
+    if tag == "Youtube":
+        print("Youtube")
+    if tag == "Google":
+        print("Google")
+    if tag == "Wikipedia":
+        print("Wikipedia")
