@@ -14,7 +14,7 @@ from tensorflow.keras.models import load_model
 wikipedia.set_lang("en")
 born_time=1629699876.6019154
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open("cfg/Arch.json").read())
+intents = json.loads(open("cfg/Arch_Master.json").read())
 words = pickle.load(open('cfg/words.pkl', 'rb'))
 classes = pickle.load(open('cfg/classes.pkl', 'rb'))
 model = load_model('model/Arch.h5')
@@ -91,4 +91,8 @@ while True:
         res = "Your Highness! What're you looking for?"
         speak(res)
         search = input("Master: ")
-        wikipedia.summary(search, sentences=1)
+        try:
+            result = wikipedia.summary(search, sentences=3)
+            speak(result)
+        except Exception:
+            speak("Please give me more information, my Lord!")
