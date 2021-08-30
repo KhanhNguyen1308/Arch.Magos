@@ -1,4 +1,6 @@
 import os
+import cv2
+import time
 import nltk
 import json
 import random
@@ -6,9 +8,9 @@ import pickle
 import pyttsx3
 import wikipedia
 import numpy as np
-import pandas as pd
 import urllib.request
 import speech_recognition as sr
+from function import count_object
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 wikipedia.set_lang("en")
@@ -22,6 +24,7 @@ Arch = pyttsx3.init('espeak')
 voice = Arch.getProperty('voices')
 Arch.setProperty('voice', voice[16])
 Arch.setProperty('rate',150)
+
 
 def speak(audio):
     print('Arch:' + audio)
