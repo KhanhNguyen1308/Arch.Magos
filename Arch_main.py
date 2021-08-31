@@ -1,73 +1,29 @@
-import os
 import cv2
-import time
-import nltk
 import json
-import random
-import pickle
 import pyttsx3
 import wikipedia
-import numpy as np
 import urllib.request
 import speech_recognition as sr
-from function import count_object
-from nltk.stem import WordNetLemmatizer
+from queue import Queue
+from threading import Thread
+from yolo import video_capture
 from tensorflow.keras.models import load_model
+from function import count_object, predict_class, get_response
 wikipedia.set_lang("en")
 born_time=1629699876.6019154
-lemmatizer = WordNetLemmatizer()
 intents = json.loads(open("cfg/Arch_Master.json").read())
-words = pickle.load(open('cfg/words.pkl', 'rb'))
-classes = pickle.load(open('cfg/classes.pkl', 'rb'))
-model = load_model('model/Arch.h5')
 Arch = pyttsx3.init('espeak')
 voice = Arch.getProperty('voices')
 Arch.setProperty('voice', voice[16])
 Arch.setProperty('rate',150)
-
+show_on = False  
+show_off = False 
+resize = False
 
 def speak(audio):
     print('Arch:' + audio)
     Arch.say(audio)
     Arch.runAndWait()
-
-
-def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
-    return sentence_words
-
-
-def bag_of_word(sentence):
-    sentence_words = clean_up_sentence(sentence)
-    bag = [0] * len(words)
-    for w in  sentence_words:
-        for i,word in enumerate(words):
-            if word == w:
-                bag[i] = 1
-    return np.array(bag)
-
-
-def predict_class(sentence):
-    bow = bag_of_word(sentence)
-    res = model.predict(np.array([bow]))[0]
-    ERROR_thres = 0.25
-    results = [[i, r] for i, r in enumerate(res) if r> ERROR_thres]
-    results.sort(key=lambda x : x[1], reverse=True)
-    return_list = []
-    for r in results:
-        return_list.append({'intent': classes[r[0]], 'probability':str(r[1])})
-    return return_list
-
-
-def get_response(intent_list, intent_json):
-    tag = intent_list[0]['intent']
-    list_of_intents = intent_json['intents']
-    for i in list_of_intents:
-        if i['tag']== tag:
-            result = random.choice(i['responses'])
-            break
-    return result
 
 work_list = ["Youtube", "Google", "Wikipedia", "music"]
 print('Arch is ready master')
@@ -99,3 +55,4 @@ while True:
             speak(result)
         except Exception:
             speak("Please give me more information, my Lord!")
+    Thread(target=video_capture, args=(show_on, show_off, resize)).start()
