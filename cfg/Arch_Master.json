@@ -53,7 +53,10 @@
      "patterns": ["quit", "shutdown", "exit", "go to sleep", "sleep", "Go to sleep", 
         "Sleep", "Quit", "Shutdown"],
      "responses": ["Yes my Lord! System is shutdown. Goodbye!", "Copy! System is shutdown. Goodbye!"]
+    },
+    {"tag": "order",
+     "patterns": ["SHOW ON", "Show on", "show on", "Show off", "SHOW OFF", "show off", "resize", "RESIZE"],
+     "responses": ["Yes my Lord!", "Yes your Grace", "Yes your highness"]
     }
-
 ]
 }
