@@ -6,7 +6,8 @@ import pickle
 import numpy as np
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-
+nltk.download('punkt')
+nltk.download('wordnet')
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open("cfg/Arch_Master.json").read())
 words = pickle.load(open('cfg/words.pkl', 'rb'))
