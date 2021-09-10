@@ -9,8 +9,8 @@ COLORS = [(0, 255, 255), (255, 255, 0), (0, 255, 0), (255, 0, 0), (255, 0, 255)]
 class_names = []
 with open("classes.txt", "r") as f:
     class_names = [cname.strip() for cname in f.readlines()]
-#vc = cv2.VideoCapture("aespa.mp4")
-vc = cv2.VideoCapture(0)
+vc = cv2.VideoCapture("aespa.mp4")
+#vc = cv2.VideoCapture(0)
 net = cv2.dnn.readNetFromDarknet("cfg/yolov4-tiny-416-2.cfg", "model/yolov4-tiny-416-2.weights")
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
