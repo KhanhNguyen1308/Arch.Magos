@@ -45,8 +45,8 @@ int main()
             class_names.push_back(line);
     }
 
-    VideoCapture source("aespa.mp4");
-
+    //VideoCapture source("aespa.mp4");
+    VideoCapture source(0);
     auto net = readNetFromDarknet("cfg/yolov4-tiny-416-2.cfg", "model/yolov4-tiny-416-2.weights");
     net.setPreferableBackend(DNN_BACKEND_CUDA);
     net.setPreferableTarget(DNN_TARGET_CUDA);
