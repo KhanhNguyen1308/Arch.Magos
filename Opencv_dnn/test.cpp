@@ -19,7 +19,7 @@ using namespace cv;
 
 int main()
 {
-	VideoCapture vid_capture("aespa.mp4");
+	VideoCapture vid_capture(0);
 	if (!vid_capture.isOpened())
 	{
 		cout << "Error opening video stream or file" << endl;

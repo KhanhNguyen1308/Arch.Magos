@@ -13,13 +13,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-using namespace std;
-using namespace cv;
-using namespace dnn;
-
 constexpr float CONFIDENCE_THRESHOLD = 0;
 constexpr float NMS_THRESHOLD = 0.4;
-constexpr int NUM_CLASSES = 2;
+constexpr int NUM_CLASSES = 80;
 
 // colors for bounding boxes
 const cv::Scalar colors[] = {
@@ -32,13 +28,17 @@ const auto NUM_COLORS = sizeof(colors)/sizeof(colors[0]);
 
 int main()
 {
-    
     std::vector<std::string> class_names;
     {
-        std::ifstream 
-        ifs(string("classes.txt").c_str());
+        std::ifstream class_file("classes.txt");
+        if (!class_file)
+        {
+            std::cerr << "failed to open classes.txt\n";
+            return 0;
+        }
+
         std::string line;
-        while (std::getline(ifs, line))
+        while (std::getline(class_file, line))
             class_names.push_back(line);
     }
 
@@ -47,6 +47,8 @@ int main()
     auto net = cv::dnn::readNetFromDarknet("cfg/yolov4-tiny-256-2.cfg", "model/yolov4-tiny-256-2.weights");
     net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
     net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+    // net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    // net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
     auto output_names = net.getUnconnectedOutLayersNames();
 
     cv::Mat frame, blob;
@@ -54,6 +56,7 @@ int main()
     while(cv::waitKey(1) < 1)
     {
         source >> frame;
+        cv::resize(frame, frame, cv::Size(), 0.5, 0.5);
         if (frame.empty())
         {
             cv::waitKey();
