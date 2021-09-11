@@ -1,2 +1,2 @@
 FLAGS="$(pkg-config --cflags --libs opencv4)"
-g++ -o test_1 test_1.cpp `pkg-config opencv4 --cflags --libs`
+g++ -o main main.cpp `pkg-config opencv4 --cflags --libs`
