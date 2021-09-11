@@ -45,9 +45,9 @@ int main()
             class_names.push_back(line);
     }
 
-    //VideoCapture source("aespa.mp4");
-    VideoCapture source(0);
-    auto net = readNetFromDarknet("cfg/yolov4-tiny-416-2.cfg", "model/yolov4-tiny-416-2.weights");
+    VideoCapture source("aespa.mp4");
+    //VideoCapture source(0);
+    auto net = readNetFromDarknet("cfg/yolov4-tiny-448-2.cfg", "model/yolov4-tiny-448-2.weights");
     net.setPreferableBackend(DNN_BACKEND_CUDA);
     net.setPreferableTarget(DNN_TARGET_CUDA);
     // net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
@@ -64,9 +64,9 @@ int main()
             waitKey();
             break;
         }
-        //resize(frame, frame, Size(), 0.5, 0.5);
+        resize(frame, frame, Size(), 0.5, 0.5);
         auto total_start = chrono::steady_clock::now();
-        blobFromImage(frame, blob, 0.00392, Size(416, 416), Scalar(), true, false, CV_32F);
+        blobFromImage(frame, blob, 0.00392, Size(448, 448), Scalar(), true, false, CV_32F);
         net.setInput(blob);
 
         auto dnn_start = chrono::steady_clock::now();
