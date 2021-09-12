@@ -47,7 +47,7 @@ int main()
 
     VideoCapture source("aespa.mp4");
     //VideoCapture source(0);
-    auto net = readNetFromDarknet("cfg/yolov4-tiny-448-2.cfg", "model/yolov4-tiny-448-2.weights");
+    auto net = readNetFromDarknet("cfg/448.cfg", "model/448.weights");
     net.setPreferableBackend(DNN_BACKEND_CUDA);
     net.setPreferableTarget(DNN_TARGET_CUDA);
     // net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
@@ -59,6 +59,8 @@ int main()
     while(true)
     {
         source >> frame;
+        int num_face=0;
+        int num_person=0;
         if (frame.empty())
         {
             waitKey();
@@ -114,6 +116,14 @@ int main()
                 rectangle(frame, cv::Point(rect.x, rect.y), cv::Point(rect.x + rect.width, rect.y + rect.height), color, 3);
                 ostringstream label_ss;
                 label_ss << class_names[c] << ": " << fixed << setprecision(2) << scores[c][idx];
+                if (class_names[c] == "face")
+                {
+                    num_face = num_face + 1;
+                }
+                if (class_names[c] == "person")
+                {
+                    num_person = num_person + 1;
+                }
                 auto label = label_ss.str();
                 int baseline;
                 auto label_bg_sz = getTextSize(label.c_str(), FONT_HERSHEY_COMPLEX_SMALL, 1, 1, &baseline);
@@ -121,6 +131,9 @@ int main()
                 putText(frame, label.c_str(), Point(rect.x, rect.y - baseline - 5), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(0, 0, 0));
             }
         }
+        ostringstream face_ss, person_ss;
+        face_ss << "face: " << num_face;
+        person_ss << "person: " << num_person;
         auto total_end = chrono::steady_clock::now();
         float inference_fps = 1000.0 / chrono::duration_cast<std::chrono::milliseconds>(dnn_end - dnn_start).count();
         float total_fps = 1000.0 / chrono::duration_cast<std::chrono::milliseconds>(total_end - total_start).count();
@@ -131,6 +144,8 @@ int main()
         int baseline;
         auto stats_bg_sz = getTextSize(stats.c_str(), FONT_HERSHEY_COMPLEX_SMALL, 1, 1, &baseline);
         rectangle(frame, Point(0, 0), Point(stats_bg_sz.width, stats_bg_sz.height + 10), Scalar(0, 0, 0), FILLED);
+        putText(frame, face_ss.str(), Point(0, 40), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255, 255, 255));
+        putText(frame, person_ss.str(), Point(0, 60), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255, 255, 255));
         putText(frame, stats.c_str(), Point(0, stats_bg_sz.height + 5), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255, 255, 255));
         char key=(char)waitKey(1);
         if(key=='q')
