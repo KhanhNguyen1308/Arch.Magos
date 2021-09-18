@@ -1,2 +1,6 @@
 face
 person
+pantsu
+bra
+no_pantsu
+no_bra
